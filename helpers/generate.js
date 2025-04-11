@@ -5,7 +5,7 @@ module.exports.generateAccessToken = (user) => {
         id: user.id,
         email: user.email
     }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "1d"
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN
     })
 }
 
@@ -14,6 +14,6 @@ module.exports.generateRefreshToken = (user) => {
         id: user.id,
         email: user.email
     }, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: "365d"
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN
     })
 }
