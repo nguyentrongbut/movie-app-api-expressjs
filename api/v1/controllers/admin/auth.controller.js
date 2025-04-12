@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const generateHelpers = require("../../../../helpers/generate")
 
-
+// [POST] /api/v1/admin/login
 module.exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -39,6 +39,7 @@ module.exports.login = async (req, res) => {
             // Save refresh token in DB
             await new RefreshToken({ token: refreshToken, userId: user.id }).save();
 
+            // Send refresh token in cookie
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 // secure: true, when deploy set true
@@ -50,7 +51,6 @@ module.exports.login = async (req, res) => {
                 message: 'Login successfully',
                 data: {
                     accessToken: accessToken,
-                    refreshToken: refreshToken
                 }
             })
         }
@@ -61,6 +61,7 @@ module.exports.login = async (req, res) => {
     }
 }
 
+// [POST] /api/v1/admin/refresh-token
 module.exports.refreshToken = async (req, res) => {
     // take refresh token from user
     const refreshToken = req.cookies.refreshToken;

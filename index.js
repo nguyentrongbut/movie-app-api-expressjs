@@ -11,7 +11,10 @@ const routersClientApiVer1 = require("./api/v1/routes/client/index.route");
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL, // FE URL
+    credentials: true // Access-Control-Allow-Credentials: true
+}));
 
 database.connect()
 
