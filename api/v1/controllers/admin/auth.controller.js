@@ -49,7 +49,6 @@ module.exports.login = async (req, res) => {
             res.status(200).json({
                 message: 'Login successfully',
                 data: {
-                    email: user.email,
                     accessToken: accessToken,
                     refreshToken: refreshToken
                 }
@@ -113,11 +112,22 @@ module.exports.refreshToken = async (req, res) => {
     })
 }
 
+// [POST] /api/v1/admin/logout
 module.exports.logout = async (req, res) => {
     // delete refresh token in DB
     await RefreshToken.deleteOne({ token: req.cookies.refreshToken });
     res.clearCookie('refreshToken');
     res.status(200).json({
         message: 'Logout successfully'
+    })
+}
+
+// [GET] /api/v1/admin/profile
+module.exports.profile = async (req, res) => {
+    const user = req.user;
+
+    res.status(200).json({
+        message: "Get profile successfully",
+        data: user
     })
 }
