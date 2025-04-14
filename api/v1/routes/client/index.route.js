@@ -1,6 +1,6 @@
 const authRouter = require('./auth.route')
 const userRouter = require('./user.route')
-const jwtMiddleware = require('../../middlewares/client/jwt')
+const jwtMiddleware = require('../../middlewares/jwt')
 
 module.exports = (app) => {
     const version = "/api/v1"

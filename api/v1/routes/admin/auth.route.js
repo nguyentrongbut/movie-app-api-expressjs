@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../../controllers/admin/auth.controller');
-const jwtMiddleware = require('../../middlewares/client/jwt');
+const jwtMiddleware = require('../../middlewares/jwt');
 const upload = require('../../middlewares/upload');
 const uploadCloud = require('../../middlewares/uploadToImgur');
 
