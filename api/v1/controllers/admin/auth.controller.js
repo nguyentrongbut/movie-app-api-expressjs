@@ -7,11 +7,11 @@ const generateHelpers = require("../../../../helpers/generate")
 // [POST] /api/v1/admin/login
 module.exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const {email, password} = req.body;
 
         // Validate input
         if (!email || !password) {
-            return res.status(400).json({ message: 'Email and password are required' });
+            return res.status(400).json({message: 'Email and password are required'});
         }
 
         const user = await Admin.findOne({
@@ -37,7 +37,7 @@ module.exports.login = async (req, res) => {
             const refreshToken = generateHelpers.generateRefreshToken(user)
 
             // Save refresh token in DB
-            await new RefreshToken({ token: refreshToken, userId: user.id }).save();
+            await new RefreshToken({token: refreshToken, userId: user.id}).save();
 
             // Send refresh token in cookie
             res.cookie('refreshToken', refreshToken, {
@@ -77,7 +77,7 @@ module.exports.refreshToken = async (req, res) => {
         token: refreshToken
     });
     if (!tokenInDb) {
-        return res.status(403).json({ message: 'Invalid refresh token' })
+        return res.status(403).json({message: 'Invalid refresh token'})
     }
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
@@ -98,7 +98,7 @@ module.exports.refreshToken = async (req, res) => {
         const newRefreshToken = generateHelpers.generateRefreshToken(user)
 
         // Save new refresh token in DB
-        await new RefreshToken({ token: newRefreshToken, userId: user.id }).save();
+        await new RefreshToken({token: newRefreshToken, userId: user.id}).save();
 
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
@@ -116,7 +116,7 @@ module.exports.refreshToken = async (req, res) => {
 // [POST] /api/v1/admin/logout
 module.exports.logout = async (req, res) => {
     // delete refresh token in DB
-    await RefreshToken.deleteOne({ token: req.cookies.refreshToken });
+    await RefreshToken.deleteOne({token: req.cookies.refreshToken});
     res.clearCookie('refreshToken');
     res.status(200).json({
         message: 'Logout successfully'
@@ -125,10 +125,44 @@ module.exports.logout = async (req, res) => {
 
 // [GET] /api/v1/admin/profile
 module.exports.profile = async (req, res) => {
-    const user = req.user;
+    const id = req.user.id;
 
-    res.status(200).json({
-        message: "Get profile successfully",
-        data: user
-    })
+    let find = {
+        deleted: false,
+        _id: id
+    }
+    try {
+        const user = await Admin.findOne(find).select("-password -deleted")
+        res.status(200).json({
+            message: 'Get profile successfully',
+            user: user
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+    }
+}
+
+module.exports.edit = async (req, res) => {
+    const id = req.user.id;
+    try {
+        // Nếu có req.avatarUrl, đảm bảo nó được thêm vào req.body
+        if (req.avatarUrl && !req.body.avatar_url) {
+            req.body.avatar_url = req.avatarUrl;
+        }
+
+        await Admin.updateOne({_id: id}, {
+            ...req.body
+        });
+
+        res.status(200).json({
+            message: "Updated profile successfully",
+        });
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    }
 }
