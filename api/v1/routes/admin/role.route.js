@@ -20,4 +20,14 @@ router.delete('/delete/:id',
     controller.delete
     )
 
+router.get('/:id',
+    validate.hasId,
+    controller.detail
+    )
+
+router.patch('/change-multi',
+    validate.hasIds,
+    controller.changeMulti
+    )
+
 module.exports = router;
