@@ -119,3 +119,20 @@ module.exports.changeMulti = async (req, res) => {
         })
     }
 }
+
+// [PATCH] api/v1/admin/role/permissions
+module.exports.permissions = async (req, res) => {
+    const permissions = JSON.parse(req.body.permissions);
+    try {
+        for (const permission of permissions) {
+            await Role.updateMany({_id: permission.id}, {permissions: permission.permissions})
+        }
+        res.status(200).send({
+            message: 'Update permissions success!',
+        })
+    } catch (error) {
+        res.status(500).send({
+            message: "Internal Server Error",
+        })
+    }
+}

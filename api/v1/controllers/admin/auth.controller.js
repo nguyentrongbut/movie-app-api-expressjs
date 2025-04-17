@@ -39,6 +39,10 @@ module.exports.login = async (req, res) => {
             // Save refresh token in DB
             await new RefreshToken({token: refreshToken, userId: user.id}).save();
 
+            // update time login
+            user.last_login = new Date();
+            await user.save();
+
             // Send refresh token in cookie
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
@@ -144,6 +148,7 @@ module.exports.profile = async (req, res) => {
     }
 }
 
+// [PATCH] /api/v1/admin/profile
 module.exports.edit = async (req, res) => {
     const id = req.user.id;
     try {

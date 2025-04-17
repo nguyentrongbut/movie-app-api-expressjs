@@ -30,4 +30,8 @@ router.patch('/change-multi',
     controller.changeMulti
     )
 
+router.patch('/permissions',
+    controller.permissions
+    )
+
 module.exports = router;
