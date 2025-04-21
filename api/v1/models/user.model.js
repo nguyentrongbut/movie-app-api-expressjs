@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
     avatar_url: String,
     status: String,
     last_login: Date,
-    role_id: String,
     deleted: {
         type: Boolean,
         default: false

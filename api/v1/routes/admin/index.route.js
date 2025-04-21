@@ -1,6 +1,7 @@
 const systemConfig = require('../../../../config/system')
 const authRouter = require('./auth.route')
 const roleRoute = require('./role.route')
+const accountRoute = require('./account.route')
 const jwtMiddleware = require('../../middlewares/jwt');
 
 module.exports = (app) => {
@@ -11,4 +12,7 @@ module.exports = (app) => {
     app.use(version + PATH_ADMIN + "/role",
         jwtMiddleware.verifyToken,
         roleRoute)
+    app.use(version + PATH_ADMIN + "/account",
+        jwtMiddleware.verifyToken,
+        accountRoute)
 }

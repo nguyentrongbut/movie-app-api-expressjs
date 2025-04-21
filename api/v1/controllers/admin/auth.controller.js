@@ -1,4 +1,5 @@
 const Admin = require("../../models/admin.model")
+const Role = require("../../models/role.model")
 const RefreshToken = require("../../models/refreshToken.model")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
@@ -15,7 +16,9 @@ module.exports.login = async (req, res) => {
         }
 
         const user = await Admin.findOne({
-            email: req.body.email
+            email: req.body.email,
+            status: "active",
+            deleted: false
         })
 
         if (!user) {
@@ -130,18 +133,31 @@ module.exports.logout = async (req, res) => {
 // [GET] /api/v1/admin/profile
 module.exports.profile = async (req, res) => {
     const id = req.user.id;
-
     let find = {
         deleted: false,
         _id: id
     }
     try {
         const user = await Admin.findOne(find).select("-password -deleted")
+
+        if (user?.role_id) {
+            const role = await Role.findOne({_id: user?.role_id}).select("-permissions -deleted")
+
+            const result = {
+                ...user.toObject(),
+                role: role.title
+            };
+            return res.status(200).json({
+                message: 'Get profile successfully',
+                user: result,
+            })
+        }
         res.status(200).json({
             message: 'Get profile successfully',
-            user: user
+            user: user,
         })
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             message: 'Internal server error'
         })

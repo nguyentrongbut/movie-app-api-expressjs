@@ -5,8 +5,10 @@ module.exports.index = async (req, res) => {
     let find = {
         deleted: false,
     }
+
+    let sort = {createdAt: -1}
     try {
-        const listRole = await Role.find(find).select("-deleted")
+        const listRole = await Role.find(find).select("-deleted").sort(sort)
         res.status(200).send({
             message: 'Get list role success',
             roles: listRole
