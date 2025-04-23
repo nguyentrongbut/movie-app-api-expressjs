@@ -79,7 +79,7 @@ module.exports.delete = async (req, res) => {
     }
 }
 
-// [PATCH] api/v1/admin/account/:status/:id
+// [PATCH] api/v1/admin/account/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
     const status = req.params.status;
     const id = req.params.id;
