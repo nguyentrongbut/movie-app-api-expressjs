@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const Role = require('../models/role.model')
 
 module.exports.verifyToken = (req, res, next) => {
     const token = req.headers['authorization']

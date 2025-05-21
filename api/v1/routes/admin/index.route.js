@@ -4,6 +4,7 @@ const roleRoute = require('./role.route')
 const accountRoute = require('./account.route')
 const settingRoute = require('./setting.route')
 const categoryRoute = require('./category.route')
+const movieRoute = require('./movie.route')
 const jwtMiddleware = require('../../middlewares/jwt');
 
 module.exports = (app) => {
@@ -23,4 +24,7 @@ module.exports = (app) => {
     app.use(version + PATH_ADMIN + "/category",
         jwtMiddleware.verifyToken,
         categoryRoute)
+    app.use(version + PATH_ADMIN + "/movie",
+        jwtMiddleware.verifyToken,
+        movieRoute)
 }

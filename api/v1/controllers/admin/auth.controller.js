@@ -141,11 +141,12 @@ module.exports.profile = async (req, res) => {
         const user = await Admin.findOne(find).select("-password -deleted")
 
         if (user?.role_id) {
-            const role = await Role.findOne({_id: user?.role_id}).select("-permissions -deleted")
+            const role = await Role.findOne({_id: user?.role_id, deleted: false}).select("-deleted")
 
             const result = {
                 ...user.toObject(),
-                role: role.title
+                role: role.title,
+                permissions: role.permissions
             };
             return res.status(200).json({
                 message: 'Get profile successfully',
@@ -157,7 +158,6 @@ module.exports.profile = async (req, res) => {
             user: user,
         })
     } catch (error) {
-        console.log(error)
         res.status(500).json({
             message: 'Internal server error'
         })
