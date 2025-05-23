@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
+const {Schema} = require("mongoose");
 
 const episodeSchema = new mongoose.Schema({
-    movie_id: String,
+    movie_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'Movie',
+        required: true
+    },
     video_url: String,
     position: Number,
     deleted: {

@@ -11,6 +11,7 @@ const movieSchema = new mongoose.Schema({
     poster_url: String,
     video_url: String,
     status: String,
+    isBanner: Boolean,
     slug: String,
     year: String,
     deleted: {

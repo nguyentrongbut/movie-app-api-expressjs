@@ -11,18 +11,20 @@ const s3 = new AWS.S3({
 });
 
 const uploadToIA = async (req, res, next) => {
-    if (!req.file) {
+    const file = req.files.video_url[0];
+
+    if (!file) {
         return res.status(400).json({ error: 'No file uploaded.' });
     }
 
     const bucket = 'fztruyen';
-    const key = req.file.originalname;
+    const key = file.originalname;
 
     const params = {
         Bucket: bucket,
         Key: key,
-        Body: req.file.buffer,
-        ContentType: req.file.mimetype,
+        Body: file.buffer,
+        ContentType: file.mimetype,
         ACL: 'public-read',
         Metadata: {
             'x-archive-meta-title': 'My Upload Title',

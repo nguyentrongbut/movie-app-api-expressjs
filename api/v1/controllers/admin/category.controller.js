@@ -2,7 +2,7 @@ const Category = require('../../models/category.model');
 const createTreeHelper = require('../../../../helpers/create.tree.helper');
 const sortHelper = require("../../../../helpers/sort.helper");
 const paginationHelper = require("../../../../helpers/pagination");
-const slugify = require('slugify');
+const {convertSlug} = require("../../../../helpers/convert.slug.helper");
 
 // [GET] api/v1/admin/category
 module.exports.index = async (req, res) => {
@@ -51,9 +51,7 @@ module.exports.index = async (req, res) => {
 module.exports.create = async (req, res) => {
     let { slug, title, ...rest } = req.body;
 
-    if (!slug || !slug.trim()) {
-        slug = slugify(title, { lower: true, strict: true, locale: "vi" });
-    }
+    slug = convertSlug(slug, title)
     try {
         const category = new Category({
             slug,
